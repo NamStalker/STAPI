@@ -2,11 +2,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using SleepysToolbox.Models;
-namespace SleepysToolbox.JwtHelpers
+namespace SleepysToolbox.Helpers
 {
-    public static class JwtHelpers
+    public static class JwtHelper
     {
-        public static IEnumerable<Claim> GetClaims(this UserTokens userAccounts, Guid Id)
+        public static IEnumerable<Claim> GetClaims(this UserToken userAccounts, Guid Id)
         {
             IEnumerable<Claim> claims = new Claim[] {
                 new Claim("Id", userAccounts.Id.ToString()),
@@ -17,16 +17,16 @@ namespace SleepysToolbox.JwtHelpers
             };
             return claims;
         }
-        public static IEnumerable<Claim> GetClaims(this UserTokens userAccounts, out Guid Id)
+        public static IEnumerable<Claim> GetClaims(this UserToken userAccounts, out Guid Id)
         {
             Id = Guid.NewGuid();
             return GetClaims(userAccounts, Id);
         }
-        public static UserTokens GenTokenkey(UserTokens model, JwtSettings jwtSettings)
+        public static UserToken GenTokenkey(UserToken model, JwtSettings jwtSettings)
         {
             try
             {
-                var UserToken = new UserTokens();
+                var UserToken = new UserToken();
                 if (model == null) throw new ArgumentException(nameof(model));
                 // Get secret key
                 var key = System.Text.Encoding.ASCII.GetBytes(jwtSettings.IssuerSigningKey);

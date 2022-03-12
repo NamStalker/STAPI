@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using Renci.SshNet;
-using System.Security.Cryptography;
 
 namespace SleepysToolbox.Controllers
 {

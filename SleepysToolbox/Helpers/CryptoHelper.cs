@@ -3,7 +3,7 @@ using System.Runtime;
 using System.Security.Cryptography;
 using SleepysToolbox.Models;
 
-namespace SleepysToolbox.JwtHelpers
+namespace SleepysToolbox.Helpers
 {
     public static class CryptoHelper
     {
@@ -14,13 +14,20 @@ namespace SleepysToolbox.JwtHelpers
 
         public static HashWithSaltResult HashPW(string pw, string salt)
         {
-            return new PasswordWithSaltHasher().HashWithSalt(pw, salt, SHA256.Create());
+            var firstPass = new PasswordWithSaltHasher().HashWithSalt(pw, salt, SHA256.Create());
+            return new PasswordWithSaltHasher().HashWithSalt(firstPass.Digest, salt, SHA256.Create());
         }
 
-        public static bool VerifyHashedPW(Users user, string pw)
+        public static bool VerifyHashedPW(User user, string pw)
         {
-            var hashedPw = new PasswordWithSaltHasher().HashWithSalt(pw, user.Password.Split(':')[1], SHA256.Create());
+            var firstPass = new PasswordWithSaltHasher().HashWithSalt(pw, user.Password.Split(':')[1], SHA256.Create());
+            var hashedPw = new PasswordWithSaltHasher().HashWithSalt(firstPass.Digest, user.Password.Split(':')[1], SHA256.Create());
             return hashedPw.Digest.Equals(user.Password.Split(':')[0]);
+        }
+
+        public static String samehash(string pw)
+        {
+            return new PasswordWithSaltHasher().HashWithSalt(pw, SHA256.Create()).Digest;
         }
     }
 
@@ -40,6 +47,15 @@ namespace SleepysToolbox.JwtHelpers
 
     public class PasswordWithSaltHasher
     {
+        public HashWithSaltResult HashWithSalt(string password, HashAlgorithm hashAlgo)
+        {
+            byte[] passwordAsBytes = Encoding.UTF8.GetBytes(password);
+            List<byte> passwordWithSaltBytes = new List<byte>();
+            passwordWithSaltBytes.AddRange(passwordAsBytes);
+            byte[] digestBytes = hashAlgo.ComputeHash(passwordWithSaltBytes.ToArray());
+            return new HashWithSaltResult("", Convert.ToBase64String(digestBytes));
+        }
+
         public HashWithSaltResult HashWithSalt(string password, int saltLength, HashAlgorithm hashAlgo)
         {
             byte[] saltBytes = RandomNumberGenerator.GetBytes(saltLength);

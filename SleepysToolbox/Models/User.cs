@@ -1,6 +1,6 @@
 ﻿namespace SleepysToolbox.Models
 {
-    public class Users
+    public class User
     {
         public string UserName
         {

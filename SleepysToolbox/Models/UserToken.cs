@@ -1,6 +1,6 @@
 ﻿namespace SleepysToolbox.Models
 {
-    public class UserTokens
+    public class UserToken
     {
         public string Token
         {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace SleepysToolbox.Models
 {
-    public class UserLogins
+    public class UserLogin
     {
         [Required]
         public string UserName
@@ -15,6 +15,6 @@ namespace SleepysToolbox.Models
             get;
             set;
         }
-        public UserLogins() { }
+        public UserLogin() { }
     }
 }
